@@ -1,4 +1,4 @@
-"""todoshka URL Configuration
+"""toodooshka URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -29,10 +29,8 @@ urlpatterns = [
     path('current/', views.currenttodos, name='currenttodos'),
     path('completed/', views.completedtodos, name='completedtodos'),
     path('todo/<int:todo_pk>', views.viewtodo, name='viewtodo'),
-    path('todo/<int:todo_pk>/complete',
-         views.completetodo,
-         name='completetodo'),
-    path('todo/<int:todo_pk>/delete',
-         views.deletetodo,
-         name='deletetodo'),
+    path(
+        'todo/<int:todo_pk>/complete', views.completetodo, name='completetodo'
+    ),
+    path('todo/<int:todo_pk>/delete', views.deletetodo, name='deletetodo'),
 ]
