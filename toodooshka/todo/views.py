@@ -11,10 +11,12 @@ from .models import Todo
 
 
 def home(request):
+    """Загрузка домашней страницы."""
     return render(request, 'todo/home.html')
 
 
 def signupuser(request):
+    """Загрузка страницы регистрации пользователя."""
     if request.method == 'GET':
         return render(
             request, 'todo/signupuser.html', {'form': UserCreationForm()}
@@ -47,6 +49,7 @@ def signupuser(request):
 
 
 def loginuser(request):
+    """Загрузка страницы авторизации пользователя."""
     if request.method == 'GET':
         return render(
             request, 'todo/loginuser.html', {'form': AuthenticationForm()}
@@ -73,6 +76,7 @@ def loginuser(request):
 
 @login_required
 def logoutuser(request):
+    """Загрузка страницы выхода пользователя."""
     if request.method == 'POST':
         logout(request)
         return redirect('home')
@@ -80,6 +84,7 @@ def logoutuser(request):
 
 @login_required
 def createtodo(request):
+    """Загрузка страницы и создание новой задачи."""
     if request.method == 'GET':
         return render(request, 'todo/createtodo.html', {'form': TodoForm()})
     else:
@@ -99,20 +104,23 @@ def createtodo(request):
 
 @login_required
 def currenttodos(request):
+    """Загрузка страницы с текущими задачами."""
     todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
     return render(request, 'todo/currenttodos.html', {'todos': todos})
 
 
 @login_required
 def completedtodos(request):
+    """Загрузка страницы с завершенными задачами."""
     todos = Todo.objects.filter(
-        user=request.user,
-        datecompleted__isnull=False).order_by('-datecompleted')
+        user=request.user, datecompleted__isnull=False
+    ).order_by('-datecompleted')
     return render(request, 'todo/completedtodos.html', {'todos': todos})
 
 
 @login_required
 def viewtodo(request, todo_pk):
+    """Загрузка страницы выбранной задачи."""
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'GET':
         form = TodoForm(instance=todo)
@@ -128,12 +136,13 @@ def viewtodo(request, todo_pk):
             return render(
                 request,
                 'todo/viewtodo.html',
-                {'todo': todo, 'form': form, 'error': 'Неверные данные'}
+                {'todo': todo, 'form': form, 'error': 'Неверные данные'},
             )
 
 
 @login_required
 def completetodo(request, todo_pk):
+    """Обработка нажатия кнопки завершения задачи."""
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'POST':
         todo.datecompleted = timezone.now()
@@ -143,6 +152,7 @@ def completetodo(request, todo_pk):
 
 @login_required
 def deletetodo(request, todo_pk):
+    """Обработка нажатия кнопки удаления задачи."""
     todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
     if request.method == 'POST':
         todo.delete()
